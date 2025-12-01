@@ -1,0 +1,24 @@
+{
+    "name": "People CRUD",
+    "dockerComposeFile": [
+        "../docker-compose.yml"
+    ],
+    "service": "app",
+    "workspaceFolder": "/workspace",
+    "postCreateCommand": "composer install --no-interaction --prefer-dist",
+    "remoteUser": "vscode",
+    "forwardPorts": [
+        3306,
+        8000
+    ],
+    "mounts": [
+        "source=${localWorkspaceFolder},target=/workspace,type=bind"
+    ],
+    "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "xdebug.php-debug",
+        "onecentlin.laravel-blade",
+        "amiralizadeh9480.laravel-extra-intellisense",
+        "humao.rest-client"
+    ]
+}
