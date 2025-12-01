@@ -18,8 +18,8 @@ Content-Type: application/json
 
 {
     "birth_date": "2015-10-10",
-    "name": "Leticia",
-    "cpf": "058.738.576-60"
+    "name": "Regina",
+    "cpf": "379.581.208-93"
 }
 
 #######################################
@@ -30,7 +30,7 @@ Content-Type: application/json
 {
     "birth_date": "2015-10-10",
     "name": "Leticia",
-    "cpf": "069.608.366-38"
+    "cpf": "379.581.208-93"
 }
 
 
