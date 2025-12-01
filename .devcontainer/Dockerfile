@@ -11,6 +11,8 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 COPY .devcontainer/php.ini /usr/local/etc/php/conf.d/99-custom.ini
 
+COPY .devcontainer/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
 RUN useradd -m vscode
 
 WORKDIR /workspace
