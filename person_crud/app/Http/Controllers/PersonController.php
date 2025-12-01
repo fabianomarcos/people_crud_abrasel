@@ -6,11 +6,14 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\JsonResponse;
 use App\Http\Requests\{PersonStoreRequest, PersonUpdateRequest};
 use App\Application\Person\DTOs\PersonData;
+use App\Application\Person\Presenters\PersonPresenter;
 use App\Application\Person\UseCases\{CreatePersonUseCase, DeletePersonUseCase, FindPersonByIdUseCase, ListPersonUseCase, UpdatePersonUseCase};
 use App\Exceptions\ResourceAlreadyExistsException;
 
 class PersonController extends Controller
 {
+    private PersonPresenter $presenter;
+
     private CreatePersonUseCase $createUseCase;
     private UpdatePersonUseCase $updateUseCase;
     private DeletePersonUseCase $deleteUseCase;
@@ -18,12 +21,14 @@ class PersonController extends Controller
     private FindPersonByIdUseCase $findByIdUseCase;
 
     public function __construct(
+        PersonPresenter $presenter,
         CreatePersonUseCase $createUseCase,
         UpdatePersonUseCase $updateUseCase,
         DeletePersonUseCase $deleteUseCase,
         ListPersonUseCase $listUseCase,
         FindPersonByIdUseCase $findByIdUseCase,
     ) {
+        $this->presenter = $presenter;
         $this->createUseCase = $createUseCase;
         $this->updateUseCase = $updateUseCase;
         $this->deleteUseCase = $deleteUseCase;
@@ -31,20 +36,15 @@ class PersonController extends Controller
         $this->findByIdUseCase = $findByIdUseCase;
     }
 
+
     public function index(): JsonResponse
     {
         try {
             $people = $this->listUseCase->execute();
 
-            $result = array_map(fn($p) => [
-                'id' => $p->id(),
-                'name' => $p->name(),
-                'cpf' => (string)$p->cpf(),
-                'birth_date' => $p->birth_date()?->format('Y-m-d'),
-                'age' => $p->age(),
-            ], $people);
-
-            return response()->json(["data" => $result]);
+            return response()->json([
+                'data' => $this->presenter->presentList($people)
+            ]);
         } catch (\DomainException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
@@ -56,13 +56,7 @@ class PersonController extends Controller
             $p = $this->findByIdUseCase->execute($id);
             if (!$p) return response()->json(['message' => 'Not found'], 404);
 
-            return response()->json([
-                'id' => $p->id(),
-                'name' => $p->name(),
-                'cpf' => (string)$p->cpf(),
-                'birth_date' => $p->birth_date()?->format('Y-m-d'),
-                'age' => $p->age(),
-            ]);
+            return response()->json($this->presenter->present($p));
         } catch (\DomainException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
@@ -74,13 +68,10 @@ class PersonController extends Controller
             $dto = new PersonData($request->validated());
             $person = $this->createUseCase->execute($dto);
 
-            return response()->json([
-                'id' => $person->id(),
-                'name' => $person->name(),
-                'cpf' => (string)$person->cpf(),
-                'birth_date' => $person->birth_date()?->format('Y-m-d'),
-                'age' => $person->age(),
-            ], 201);
+            return response()->json(
+                $this->presenter->present($person),
+                201
+            );
         } catch (ResourceAlreadyExistsException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
@@ -92,13 +83,7 @@ class PersonController extends Controller
             $dto = new PersonData($request->validated());
             $person = $this->updateUseCase->execute($id, $dto);
 
-            return response()->json([
-                'id' => $person->id(),
-                'name' => $person->name(),
-                'cpf' => (string)$person->cpf(),
-                'birth_date' => $person->birth_date()?->format('Y-m-d'),
-                'age' => $person->age(),
-            ]);
+            return response()->json($this->presenter->present($person));
         } catch (\DomainException $e) {
             return response()->json(['error' => $e->getMessage()], 400);
         }
