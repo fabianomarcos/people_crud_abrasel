@@ -90,6 +90,7 @@
             .age {
                 max-width: 40px;
             }
+        }
     </style>
 </head>
 
@@ -181,20 +182,23 @@
                     fetchPeople();
                 } else {
                     const error = await res.json();
-                    alert(error.message || 'Erro ao adicionar pessoa.');
+                    alert(error.message || error.error || 'Erro ao adicionar pessoa.');
+                    fetchPeople();
                 }
             } catch (err) {
-                console.error(err);
+                alert(error.message || error.error || 'Erro ao adicionar pessoa.');
+                fetchPeople();
             }
         });
 
         list.addEventListener('click', async e => {
             const li = e.target.closest('li');
             const id = li.dataset.id;
-            list.innerHTML = 'Carregando';
+
 
             if (e.target.classList.contains('delete')) {
                 if (confirm('Deseja realmente excluir?')) {
+                    list.innerHTML = 'Carregando';
                     await fetch(`${API_URL}/${id}`, {
                         method: 'DELETE'
                     });
@@ -203,6 +207,7 @@
             }
 
             if (e.target.classList.contains('update')) {
+                list.innerHTML = 'Carregando';
                 const updatedData = {
                     name: li.querySelector('.name').value,
                     cpf: li.querySelector('.cpf').value,
@@ -224,6 +229,7 @@
                     }
                 } catch (err) {
                     console.error(err);
+                    fetchPeople();
                 }
             }
         });
