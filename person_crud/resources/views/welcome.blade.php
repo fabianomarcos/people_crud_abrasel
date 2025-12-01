@@ -96,6 +96,14 @@
         const list = document.getElementById('peopleList');
         const submitButton = form.querySelector('button[type="submit"]');
 
+        const disableButton = (button) => {
+            button.disabled = true;
+            button.innerHTML = "Carregando...";
+        }
+
+
+
+
         async function fetchPeople() {
             list.innerHTML = 'Carregando';
 
@@ -128,10 +136,10 @@
 
         form.addEventListener('submit', async e => {
             e.preventDefault();
+            list.innerHTML = 'Carregando';
 
             const submitButton = form.querySelector('button[type="submit"]');
-            submitButton.textContent = 'Carregando...';
-            submitButton.disabled = true;
+            disableButton(submitButton)
 
             const name = document.getElementById('name').value;
             const cpf = document.getElementById('cpf').value;
@@ -163,6 +171,7 @@
         list.addEventListener('click', async e => {
             const li = e.target.closest('li');
             const id = li.dataset.id;
+            list.innerHTML = 'Carregando';
 
             if (e.target.classList.contains('delete')) {
                 if (confirm('Deseja realmente excluir?')) {
