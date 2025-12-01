@@ -23,6 +23,12 @@ class Handler extends ExceptionHandler
                 $status = $exception->getStatusCode();
             }
 
+            if ($exception instanceof \RuntimeException) {
+                return response()->json([
+                    'error' => $exception->getMessage()
+                ], 400);
+            }
+
             return response()->json([
                 'error' => true,
                 'message' => $exception->getMessage()
