@@ -8,69 +8,88 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin: 0;
+            padding: 0;
             background-color: #f5f5f5;
-        }
 
-        h1 {
-            text-align: center;
-        }
-
-        form,
-        ul {
-            max-width: 800px;
-            margin: 20px auto;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-        }
-
-        input {
-            padding: 8px;
-            margin: 5px 0;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        button {
-            padding: 10px 15px;
-            margin: 5px;
-            border: none;
-            background: #28a745;
-            color: white;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        button.delete {
-            background: #dc3545;
-        }
-
-        li {
             display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-            border-bottom: 1px solid #ddd;
-        }
+            flex-direction: column;
+            align-items: center;
+            width: 100vw;
 
-        li input {
-            width: auto;
-            flex: 1;
-            margin-right: 5px;
-        }
+            @media(max-width: 700px) {
+                li {
+                    flex-direction: column;
+                }
 
-        .name {
-            max-width: 160px;
-        }
+                li input,
+                .name,
+                .cpf,
+                .age {
+                    width: 100%;
+                    max-width: 100% !important;
+                }
+            }
 
-        .cpf {
-            max-width: 120px;
-        }
+            h1 {
+                text-align: center;
+            }
 
-        .age {
-            width: 40px;
-        }
+            form,
+            ul {
+                margin: 10px 0 20px;
+                background: #fff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+                width: 80%;
+            }
+
+            input {
+                padding: 8px;
+                margin: 5px 0;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            button {
+                padding: 10px 15px;
+                margin: 5px;
+                border: none;
+                background: #28a745;
+                color: white;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            button.delete {
+                background: #dc3545;
+            }
+
+            li {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 0;
+                border-bottom: 1px solid #ddd;
+            }
+
+            li input {
+                width: auto;
+                flex: 1;
+                margin-right: 5px;
+            }
+
+            .name {
+                max-width: 160px;
+            }
+
+            .cpf {
+                max-width: 120px;
+            }
+
+            .age {
+                max-width: 40px;
+            }
     </style>
 </head>
 
@@ -106,6 +125,7 @@
 
         async function fetchPeople() {
             list.innerHTML = 'Carregando';
+            disableButton(submitButton)
 
             try {
                 const res = await fetch(API_URL);
